@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aatran | Luxury Management</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #050505;
+            --gold: #c5a059;
+            --white: #ffffff;
+            --glass: rgba(255, 255, 255, 0.05);
+            --text-main: #ffffff;
+            --card-bg: #111;
+            --transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        body.light-mode {
+            --bg-dark: #fcfcfc;
+            --text-main: #1a1a1a;
+            --glass: rgba(0, 0, 0, 0.04);
+            --card-bg: #ffffff;
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            min-height: 100vh;
+            transition: var(--transition);
+            position: relative;
+            background-image: 
+                radial-gradient(circle at top, var(--glass) 0%, var(--bg-dark) 100%),
+                url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="150" height="150" viewBox="0 0 150 150"><text x="50%" y="50%" text-anchor="middle" font-family="\'Playfair Display\', serif" font-size="20" fill="rgba(197, 160, 89, 0.02)" font-weight="900" text-transform="uppercase">Aatran</text></svg>');
+        }
+
+        .mode-toggle {
+            position: absolute;
+            top: 30px;
+            right: 30px;
+            z-index: 9999;
+            width: 44px;
+            height: 24px;
+            background: var(--glass);
+            border: 1px solid var(--gold);
+            border-radius: 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            padding: 2px;
+            transition: var(--transition);
+        }
+
+        .toggle-circle {
+            width: 18px;
+            height: 18px;
+            background: var(--gold);
+            border-radius: 50%;
+            transition: var(--transition);
+        }
+
+        body.light-mode .toggle-circle {
+            transform: translateX(20px);
+            background: #1a1a1a;
+        }
+        
+        body.light-mode .mode-toggle {
+            background: var(--gold);
+            border-color: var(--gold);
+        }
+
+        header { padding: 50px 20px; text-align: center; }
+        .brand-frame { border: 1px solid var(--gold); padding: 15px 40px; display: inline-block; margin-bottom: 25px; }
+        .brand-name { font-family: 'Playfair Display', serif; font-size: clamp(28px, 5vw, 50px); color: var(--gold); text-transform: uppercase; letter-spacing: 12px; margin: 0; }
+        
+        .nav-tabs { display: flex; justify-content: center; gap: 25px; margin-bottom: 30px; }
+        .tab-btn { font-size: 10px; text-transform: uppercase; letter-spacing: 2px; color: #888; cursor: pointer; transition: var(--transition); padding-bottom: 5px; border-bottom: 1px solid transparent; }
+        .tab-btn.active { color: var(--gold); border-bottom-color: var(--gold); }
+
+        .content-section { display: none; padding: 20px; max-width: 1200px; margin: 0 auto; animation: fadeIn 0.5s; }
+        .content-section.active { display: block; }
+
+        .product-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 30px; }
+
+        .card-3d { 
+            background: var(--card-bg); height: 450px; position: relative; overflow: hidden; 
+            border: 1px solid var(--glass); transition: var(--transition);
+        }
+        .card-3d:hover { transform: translateY(-8px); border-color: var(--gold); }
+        .card-3d img { width: 100%; height: 100%; object-fit: cover; filter: brightness(0.7); transition: var(--transition); }
+        body.light-mode .card-3d img { filter: brightness(0.9); }
+
+        .btn-add {
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            background: transparent; border: 1px solid white; color: white; padding: 10px 20px;
+            text-transform: uppercase; font-size: 9px; letter-spacing: 2px; cursor: pointer; opacity: 0; transition: 0.3s;
+        }
+        .card-3d:hover .btn-add { opacity: 1; }
+        .btn-add:hover { background: var(--gold); border-color: var(--gold); color: #000; }
+
+        .info-bottom { position: absolute; bottom: 0; width: 100%; padding: 20px; text-align: center; background: linear-gradient(transparent, var(--bg-dark)); }
+        .info-bottom h3 { font-family: 'Playfair Display', serif; margin: 0; font-size: 18px; }
+        .info-bottom p { color: var(--gold); margin: 5px 0 0; font-size: 13px; }
+
+        .cart-container { background: var(--glass); padding: 30px; border: 1px solid var(--glass); }
+        .cart-item { display: flex; justify-content: space-between; align-items: center; padding: 15px 0; border-bottom: 1px solid var(--glass); }
+        .qty-btn { background: transparent; border: 1px solid var(--gold); color: var(--gold); width: 25px; height: 25px; cursor: pointer; }
+        .total-section { margin-top: 25px; text-align: right; font-size: 20px; color: var(--gold); font-weight: 600; }
+
+        .btn-order {
+            display: block; width: 100%; max-width: 200px; margin: 30px 0 0 auto;
+            background: var(--gold); color: #000; border: none; padding: 12px;
+            font-family: 'Poppins', sans-serif; font-weight: 600; text-transform: uppercase;
+            letter-spacing: 2px; font-size: 12px; cursor: pointer; transition: var(--transition);
+        }
+        .btn-order:hover { filter: brightness(1.2); transform: translateY(-2px); }
+
+        .about-content { max-width: 800px; margin: 0 auto; line-height: 1.8; text-align: center; padding: 40px 20px; }
+        .about-content h2 { font-family: 'Playfair Display', serif; color: var(--gold); font-size: 32px; margin-bottom: 20px; }
+        .about-content p { margin-bottom: 20px; font-weight: 300; letter-spacing: 0.5px; }
+        .insta-link { display: inline-flex; align-items: center; gap: 10px; color: var(--gold); text-decoration: none; font-size: 14px; margin-top: 40px; border: 1px solid var(--gold); padding: 10px 25px; transition: var(--transition); text-transform: uppercase; letter-spacing: 2px; }
+        .insta-link:hover { background: var(--gold); color: #000; }
+
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    </style>
+</head>
+<body>
+
+    <div class="mode-toggle" id="modeBtn" onclick="toggleMode()">
+        <div class="toggle-circle"></div>
+    </div>
+
+    <header>
+        <div class="brand-frame"><h1 class="brand-name">Aatran</h1></div>
+        <nav class="nav-tabs">
+            <div class="tab-btn active" onclick="openSection('store', this)">Collection</div>
+            <div class="tab-btn" onclick="openSection('about', this)">About Us</div>
+            <div class="tab-btn" onclick="openSection('cart', this)">Cart (<span id="cart-count">0</span>)</div>
+        </nav>
+    </header>
+
+    <section id="store" class="content-section active">
+        <div class="product-grid">
+            <div class="card-3d">
+                <img src="https://www.scentstore.com/wp-content/uploads/2024/07/Emporio-Armani-Stronger-With-You.jpg">
+                <button class="btn-add" onclick="addToCart('Stronger With You', 700)">Add to Cart</button>
+                <div class="info-bottom"><h3>Stronger With You</h3><p>700 EGP</p></div>
+            </div>
+            <div class="card-3d">
+                <img src="https://cdn.notinoimg.com/detail_main_lq/armani/3614273336383_04_/emporio-stronger-with-you-absolutely___250923.jpg">
+                <button class="btn-add" onclick="addToCart('Stronger With You Absolutely', 750)">Add to Cart</button>
+                <div class="info-bottom"><h3>Stronger With You Absolutely</h3><p>750 EGP</p></div>
+            </div>
+            <div class="card-3d">
+                <img src="https://cdn03.ciceksepeti.com/cicek/kcm84282731-1/XL/emporio-armani-stronger-with-you-intensely-edp-150-ml-erkek-parfumu-kcm84282731-5af37e4d-b308-4724-83e5-68f34bbddb29.jpg">
+                <button class="btn-add" onclick="addToCart('Stronger With You Intensely', 750)">Add to Cart</button>
+                <div class="info-bottom"><h3>Stronger With You Intensely</h3><p>750 EGP</p></div>
+            </div>
+
+            <div class="card-3d">
+                <img src="https://luluatalmusk.com/cdn/shop/files/IMG-2368.png?v=1751294964">
+                <button class="btn-add" onclick="addToCart('arrogate pink', 1500)">Add to Cart</button>
+                <div class="info-bottom"><h3>arrogate pink</h3><p>1500 EGP</p></div>
+            </div>
+
+            <div class="card-3d">
+                <img src="https://kikilunabeauty.com/cdn/shop/files/FEC32DA9-A977-49BF-BC6B-2AC5493DC66C.jpg?v=1749599380">
+                <button class="btn-add" onclick="addToCart('wild colt', 900)">Add to Cart</button>
+                <div class="info-bottom"><h3>wild colt</h3><p>1500 EGP</p></div>
+            </div>
+
+            <div class="card-3d">
+                <img src="https://visionaryfragrances.com/cdn/shop/files/ValentinoIntense_800x.jpg?v=1683123613">
+                <button class="btn-add" onclick="addToCart('Valentino Intense', 800)">Add to Cart</button>
+                <div class="info-bottom"><h3>Valentino Intense</h3><p>800 EGP</p></div>
+            </div>
+
+            <div class="card-3d">
+                <img src="https://images.unsplash.com/photo-1592914610354-fd354ea45e48?q=80&w=800">
+                <button class="btn-add" onclick="addToCart('coco chanel', 650)">Add to Cart</button>
+                <div class="info-bottom"><h3>coco chanle</h3><p>650 EGP</p></div>
+            </div>
+            <div class="card-3d">
+                <img src="https://www.whiffculture.com/cdn/shop/files/viktorrolf-spicebomb-extreme-4129210.jpg?v=1764262749">
+                <button class="btn-add" onclick="addToCart('Spicebomb Extreme', 650)">Add to Cart</button>
+                <div class="info-bottom"><h3>Spicebomb Extreme</h3><p>650 EGP</p></div>
+            </div>
+            <div class="card-3d">
+                <img src="https://www.louisvuitton.com/images/is/image/lv/1/PP_VP_AS/louis-vuitton-pacific-chill-fragrances--LP0326_PM2_Front%20view.png?wid=800">
+                <button class="btn-add" onclick="addToCart('Pacific Chill', 700)">Add to Cart</button>
+                <div class="info-bottom"><h3>Pacific Chill</h3><p>700 EGP</p></div>
+            </div>
+            <div class="card-3d">
+                <img src="https://cdn.fynd.com/v2/falling-surf-7c8bb8/fyprod/wrkr/products/pictures/item/free/original/azzaro/0HWHBQ5G325-2/4/Fl52eRTNbS-5.jpg">
+                <button class="btn-add" onclick="addToCart('The Most Wanted', 700)">Add to Cart</button>
+                <div class="info-bottom"><h3>The Most Wanted</h3><p>700 EGP</p></div>
+            </div>
+            <div class="card-3d">
+                <img src="https://parfumexquis.com/cdn/shop/files/althair_6d49bc40-1e88-424a-a08d-afa83871cb34.jpg?v=1705700183&width=1400">
+                <button class="btn-add" onclick="addToCart('Althaïr', 800)">Add to Cart</button>
+                <div class="info-bottom"><h3>Althaïr</h3><p>800 EGP</p></div>
+            </div>
+            <div class="card-3d">
+                <img src="https://cdn.salla.sa/DGzOVD/1a1d70b7-b2c0-42c4-836f-b46f65575684-1000x1000-MfopcPux0gKge21mRh08WJb2G5TGaTZicbVN9VxY.jpg">
+                <button class="btn-add" onclick="addToCart('Burberry Her', 650)">Add to Cart</button>
+                <div class="info-bottom"><h3>Burberry Her</h3><p>650 EGP</p></div>
+            </div>
+            <div class="card-3d">
+                <img src="https://i0.wp.com/ashrybeauty.com/wp-content/uploads/2024/09/RepushBR540-2024_Triptych_exdp_70ml_1080x1080.webp?fit=1080%2C1080&ssl=1">
+                <button class="btn-add" onclick="addToCart('Baccarat Rouge 540', 700)">Add to Cart</button>
+                <div class="info-bottom"><h3>Baccarat Rouge 540</h3><p>700 EGP</p></div>
+            </div>
+            <div class="card-3d">
+                <img src="https://cdn.dsmcdn.com/mnresize/420/620/ty1000076/product/media/images/prod/PIM/20260122/08/81334bb8-f57a-4405-9cbe-d6ce612400c3/1_org_zoom.jpg">
+                <button class="btn-add" onclick="addToCart('liber intense', 700)">Add to Cart</button>
+                <div class="info-bottom"><h3>liber intense</h3><p>700 EGP</p></div>
+            </div>
+        </div>
+    </section>
+
+    <section id="about" class="content-section">
+        <div class="about-content">
+            <h2>Luxury Refined</h2>
+            <p>Aatran is more than just a perfume brand; it is a statement of elegance and timeless luxury. We specialize in blending the rarest oriental essences with modern aromatic sophistication to create scents that linger in memory.</p>
+            <p>Our mission is to provide an olfactory experience that defines your presence and complements your unique character. Every bottle in our collection is crafted with precision, passion, and an uncompromising commitment to quality.</p>
+            <p>From the heart of Egypt to the world of high-end perfumery, Aatran stands as a symbol of prestige and modern heritage.</p>
+            
+            <a href="https://www.instagram.com/aatran__perfume?igsh=MW83d3pzY3JyMDQ0OA==" target="_blank" class="insta-link">
+                Follow us on Instagram
+            </a>
+        </div>
+    </section>
+
+    <section id="cart" class="content-section">
+        <div class="cart-container">
+            <h2 style="font-family: 'Playfair Display', serif; border-bottom: 1px solid var(--gold); padding-bottom: 10px;">Your Bag</h2>
+            <div id="cart-items"><p style="color: #666;">Empty.</p></div>
+            <div class="total-section" id="cart-total"></div>
+            <div id="order-container"></div>
+        </div>
+    </section>
+
+    <script>
+        let cart = [];
+        function toggleMode() { document.body.classList.toggle('light-mode'); }
+        function addToCart(name, price) {
+            const existing = cart.find(item => item.name === name);
+            if (existing) { existing.qty++; } else { cart.push({ name, price, qty: 1 }); }
+            updateUI();
+        }
+        function changeQty(name, delta) {
+            const item = cart.find(item => item.name === name);
+            if (item) {
+                item.qty += delta;
+                if (item.qty <= 0) { cart = cart.filter(i => i.name !== name); }
+            }
+            updateUI();
+        }
+
+        function processOrder() {
+            const itemsTotal = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
+            const deliveryTotal = 50; 
+            const finalTotal = itemsTotal + deliveryTotal;
+
+            let orderText = "Aatran Order Details:\n\n";
+            cart.forEach(item => {
+                orderText += `- ${item.name} (x${item.qty}): ${item.price * item.qty} EGP\n`;
+            });
+            orderText += `\nDelivery Fees: ${deliveryTotal} EGP\nTotal Amount: ${finalTotal} EGP`;
+
+            navigator.clipboard.writeText(orderText).then(() => {
+                alert("Order details copied to clipboard! You will be redirected to Instagram to paste your order.");
+                window.location.href = "https://www.instagram.com/aatran__perfume?igsh=MW83d3pzY3JyMDQ0OA==";
+            }).catch(err => {
+                window.location.href = "https://www.instagram.com/aatran__perfume?igsh=MW83d3pzY3JyMDQ0OA==";
+            });
+        }
+
+        function updateUI() {
+            const count = cart.reduce((sum, item) => sum + item.qty, 0);
+            document.getElementById('cart-count').innerText = count;
+            const container = document.getElementById('cart-items');
+            const orderContainer = document.getElementById('order-container');
+            
+            if (cart.length === 0) {
+                container.innerHTML = '<p style="color: #666;">Empty.</p>';
+                document.getElementById('cart-total').innerText = "";
+                orderContainer.innerHTML = "";
+                return;
+            }
+            container.innerHTML = cart.map(item => `
+                <div class="cart-item">
+                    <div><h4>${item.name}</h4><p style="color:var(--gold); font-size:12px;">${item.price} EGP</p></div>
+                    <div>
+                        <button class="qty-btn" onclick="changeQty('${item.name}', -1)">-</button>
+                        <span style="margin:0 10px;">${item.qty}</span>
+                        <button class="qty-btn" onclick="changeQty('${item.name}', 1)">+</button>
+                    </div>
+                </div>
+            `).join('');
+            const total = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
+            document.getElementById('cart-total').innerText = `Total: ${total.toLocaleString()} EGP (+ 50 EGP Delivery)`;
+            
+            orderContainer.innerHTML = '<button class="btn-order" onclick="processOrder()">Order Now</button>';
+        }
+
+        function openSection(id, btn) {
+            document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+            btn.classList.add('active');
+        }
+    </script>
+</body>
+</html>
+
